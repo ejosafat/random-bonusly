@@ -1,3 +1,5 @@
+'use strict';
+
 const https = require('https');
 
 const accessToken = require('./secrets.json').access_token;
@@ -6,12 +8,18 @@ const usersEndpoint = 'users';
 
 const requestUri = `https://${apiUrl}${usersEndpoint}?access_token=${accessToken}`;
 
-https.get(requestUri, (res) => {
-  console.log('statusCode:', res.statusCode);
-  console.log('headers:', res.headers);
+let users;
 
-  res.on('data', (d) => {
-    process.stdout.write(d);
+https.get(requestUri, (res) => {
+  let output = '';
+
+  res.on('data', (chunk) => {
+    output += chunk.toString();
+  });
+
+  res.on('end', () => {
+    users = JSON.parse(output).result.map(entry => entry.username);
+    console.log(users);
   });
 }).on('error', (e) => {
   console.log(e);
