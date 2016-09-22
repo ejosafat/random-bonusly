@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ejosafat/random-bonusly/issues"
   },
-  "homepage": "https://github.com/ejosafat/random-bonusly#readme"
+  "homepage": "https://github.com/ejosafat/random-bonusly#readme",
+  "dependencies": {
+    "request": "^2.75.0"
+  }
 }
