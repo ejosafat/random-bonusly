@@ -30,7 +30,14 @@ In a linux deb based distro,
 $ sudo apt-get fortunes
 ```
 
-After installing those, clone this repo into a local folder. Rename the file secrets.sample.json to secrets.json and edit it to change "youraccesstokenhere" to your bonus.ly access_token, that, after logging in, you can get from [here](https://bonus.ly/api).
+After installing those, clone this repo into a local folder. You need to create a file in the same folder named *secrets.json*, with this format:
+```
+{
+    "access_token": "youraccesstokenhere"
+}
+```
+Rename the file secrets.sample.json to secrets.json and edit it to change "youraccesstokenhere" to your bonus.ly access_token, that, after logging in, you can get from [here](https://bonus.ly/api).
+
 Then from within the cloned folder, run
 ```
 $ npm install -g . 
