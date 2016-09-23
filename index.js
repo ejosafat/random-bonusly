@@ -14,25 +14,35 @@ const usersEndpoint = 'users';
 const requestUri = `https://${apiUrl}${usersEndpoint}?access_token=${accessToken}`;
 
 let users;
+let me;
 
-https.get(requestUri, (res) => {
-  let output = '';
+request.get({
+    url: `https://bonus.ly/api/v1/users/me?access_token=${accessToken}`,
+    json: true,
+}, (err, resp, body) => {
+    me = body.result.username;
+    requestUsers();
+});
 
-  res.on('data', (chunk) => {
-    output += chunk.toString();
-  });
+function requestUsers() {
+    request.get({
+        url: requestUri,
+        json: true,
+    }, (err, resp, body) => {
+        users = body.result.map(entry => entry.username)
+            .filter((username) => username !== me);
+        const bonus = createBonus(users);
+        postBonus(bonus);
+    });
+}
 
-  res.on('end', () => {
-    users = JSON.parse(output).result.map(entry => entry.username);
+function createBonus(users) {
     const user = users[getRandomInt(0, users.length)];
     const fortune = spawnSync('fortune', ['startrek']).stdout.toString();
     let bonus = `+1 @${user} ${fortune} #why-so-serious`;
     console.log(bonus);
-    postBonus(bonus);
-  });
-}).on('error', (e) => {
-  console.log(e);
-});
+    return bonus;
+}
 
 function postBonus(bonus) {
     request.post({
