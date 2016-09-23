@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "Random bonus generator to be used with bonus.ly",
   "main": "index.js",
+  "bin": {
+      "random-bonusly": "./index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
