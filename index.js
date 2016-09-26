@@ -7,10 +7,30 @@ const spawnSync = require('child_process').spawnSync;
 const accessToken = require('./secrets.json').access_token;
 const apiUrl = 'https://bonus.ly/api/v1/';
 const auth = `?access_token=${accessToken}`;
+const online = false;
 
-getOthers().then((users) => {
-    postBonus(createBonus(users));
-});
+module.exports = {
+    reward,
+}
+
+if (require.main == module) {
+  reward().then((result) => {
+    console.log(result);
+  })
+  .catch((err) => console.log('error', err));
+}
+
+function reward() {
+    return new Promise((resolve, reject) => {
+        getOthers().then((users) => {
+            postBonus(createBonus(users)).then((result) => {
+                resolve(result);
+            }).catch((err) => {
+                reject(err);
+            });
+        });
+    });
+}
 
 function getOthers() {
     return new Promise((resolve, reject) => {
@@ -65,19 +85,32 @@ function createBonus(users) {
 }
 
 function postBonus(reason) {
-    console.log(reason);
-    request.post({
-        url: `${apiUrl}bonuses${auth}`,
-        json: {
-          reason,
-        }
-      }, (err, resp, body) => {
-        if (resp.statusCode === 200) {
-          console.log(`${body.result.giver.giving_balance} BK bucks left`);
+    let left;
+    const promise = new Promise((resolve, reject) => {
+        if (online) {
+            request.post({
+                url: `${apiUrl}bonuses${auth}`,
+                json: {
+                    reason,
+                }
+            }, (err, resp, body) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    left = `${body.result.giver.giving_balance} BK bucks left`;
+                    resolve({
+                        reason,
+                        left,
+                    });
+                }
+            });
         } else {
-          console.log(err);
+            resolve({
+                reason,
+            });
         }
-      });
+    });
+    return promise;
 }
 
 function getRandomInt(min, max) {
