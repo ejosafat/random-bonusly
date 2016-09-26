@@ -14,16 +14,22 @@ module.exports = {
 }
 
 if (require.main == module) {
-  reward().then((result) => {
+  const argv = require('minimist')(process.argv.slice(2));
+  reward({
+    'dryRun': argv['dry-run'],
+  }).then((result) => {
     console.log(result);
   })
   .catch((err) => console.log('error', err));
 }
 
-function reward() {
+function reward(options) {
     return new Promise((resolve, reject) => {
         getOthers().then((users) => {
-            postBonus(createBonus(users)).then((result) => {
+            postBonus({
+              reason: createBonus(users),
+              dryRun: options.dryRun,
+            }).then((result) => {
                 resolve(result);
             }).catch((err) => {
                 reject(err);
@@ -84,10 +90,11 @@ function createBonus(users) {
     return `+1 @${user} ${fortune} #why-so-serious`
 }
 
-function postBonus(reason) {
+function postBonus(options) {
+  const { dryRun, reason } = options;
     let left;
     const promise = new Promise((resolve, reject) => {
-        if (online) {
+        if (!dryRun && online) {
             request.post({
                 url: `${apiUrl}bonuses${auth}`,
                 json: {
