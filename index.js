@@ -7,7 +7,7 @@ const spawnSync = require('child_process').spawnSync;
 const accessToken = require('./secrets.json').access_token;
 const apiUrl = 'https://bonus.ly/api/v1/';
 const auth = `?access_token=${accessToken}`;
-const online = false;
+const online = true;
 
 module.exports = {
     reward,
