@@ -47,4 +47,7 @@ Now you are set to go! Just type
 ```
 $ random-bonusly
 ```
-and you'll see the bonus given and how many points left you have to reward others.
+and you'll see the bonus given and how many points left you have to reward others. If you just want to check the bonus generated without posting it, use
+```
+$ random-bonusly --dry-run
+```
