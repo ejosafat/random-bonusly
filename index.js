@@ -7,7 +7,7 @@ const spawnSync = require('child_process').spawnSync;
 const accessToken = require('./secrets.json').access_token;
 const apiUrl = 'https://bonus.ly/api/v1/';
 const auth = `?access_token=${accessToken}`;
-const online = true;
+const online = false;
 
 module.exports = {
     reward,
@@ -20,6 +20,8 @@ if (require.main == module) {
   reward({
     dryRun: argv['dry-run'],
     set: argv._,
+    points: argv.p || 1,
+    hashtag: argv['#'] || 'why-so-serious',
   }).then((result) => {
     console.log(result);
   })
@@ -29,11 +31,12 @@ if (require.main == module) {
 function reward(options) {
     return new Promise((resolve, reject) => {
         getOthers().then((users) => {
-            postBonus({
-              reason: createBonus({
-                users,
-                set: options.set,
-              }),
+          const reason = createBonus(Object.assign({
+            users,
+          }, options))
+
+          postBonus({
+              reason,
               dryRun: options.dryRun,
             }).then((result) => {
                 resolve(result);
@@ -93,12 +96,12 @@ function getUsers() {
 }
 
 function createBonus(options) {
-    const { set, users } = options;
+    const { hashtag, set, users, points } = options;
     const user = users[getRandomInt(0, users.length)];
     const fortuneSet = set.length === 0 ? ['startrek'] : set;
     const fortune = spawnSync('fortune', fortuneSet).stdout.toString();
 
-    return `+1 @${user} ${fortune} #why-so-serious`
+    return `+${points} @${user} ${fortune} #${hashtag}`
 }
 
 function postBonus(options) {

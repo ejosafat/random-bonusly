@@ -50,7 +50,9 @@ $ random-bonusly
 and you'll see the bonus given and how many points left you have to reward others.
 
 ### Command line options
-* --dry-run: generate a bonus and log it without posting
+* -#: hashtag to be used. Add an space between the flag and the hashtag.
+* --dry-run: generate a bonus and log it without posting.
+* -p: number of points to be given.
 
 ### Using different fortune sets
 After the last command line option, just add whatever sets you want, separated by spaces, for example:
