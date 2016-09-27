@@ -7,7 +7,7 @@ This is a command line utility, once installed, just type
 ```
 $ random-bonusly
 ```
-and you'll create a +1 bonus to a random person, with a random quote from Star Trek and the hashtag #why-so-serious.
+and you'll create a +1 bonus to a random person, with a random quote from Star Trek (default) or from any set you specify, and the hashtag #why-so-serious.
 ## Getting started
 This application is dependent on Node 6.x and an old application known as fortune(s). To install node you can use
 ```
@@ -47,7 +47,18 @@ Now you are set to go! Just type
 ```
 $ random-bonusly
 ```
-and you'll see the bonus given and how many points left you have to reward others. If you just want to check the bonus generated without posting it, use
+and you'll see the bonus given and how many points left you have to reward others.
+
+### Command line options
+* --dry-run: generate a bonus and log it without posting
+
+### Using different fortune sets
+After the last command line option, just add whatever sets you want, separated by spaces, for example:
 ```
-$ random-bonusly --dry-run
+$ random-bonusly --dry-run science pets
 ```
+To see available sets of quotes, 
+```
+$ fortune -f
+```
+

@@ -14,9 +14,12 @@ module.exports = {
 }
 
 if (require.main == module) {
-  const argv = require('minimist')(process.argv.slice(2));
+  const argv = require('minimist')(process.argv.slice(2), {
+    boolean: true,
+  });
   reward({
-    'dryRun': argv['dry-run'],
+    dryRun: argv['dry-run'],
+    set: argv._,
   }).then((result) => {
     console.log(result);
   })
@@ -27,13 +30,19 @@ function reward(options) {
     return new Promise((resolve, reject) => {
         getOthers().then((users) => {
             postBonus({
-              reason: createBonus(users),
+              reason: createBonus({
+                users,
+                set: options.set,
+              }),
               dryRun: options.dryRun,
             }).then((result) => {
                 resolve(result);
             }).catch((err) => {
                 reject(err);
             });
+        })
+        .catch((err) => {
+          console.log(err);
         });
     });
 }
@@ -83,9 +92,11 @@ function getUsers() {
     });
 }
 
-function createBonus(users) {
+function createBonus(options) {
+    const { set, users } = options;
     const user = users[getRandomInt(0, users.length)];
-    const fortune = spawnSync('fortune', ['startrek']).stdout.toString();
+    const fortuneSet = set.length === 0 ? ['startrek'] : set;
+    const fortune = spawnSync('fortune', fortuneSet).stdout.toString();
 
     return `+1 @${user} ${fortune} #why-so-serious`
 }
