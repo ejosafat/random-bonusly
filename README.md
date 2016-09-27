@@ -42,7 +42,7 @@ Then from within the cloned folder, run
 ```
 $ npm install -g . 
 ```
-You might to run that as sudo if you are using Linux, depending on your distro.
+You might have to run that as sudo if you are using Linux, depending on your distro.
 Now you are set to go! Just type 
 ```
 $ random-bonusly
