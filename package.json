@@ -7,7 +7,7 @@
     "random-bonusly": "./index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/mocha/bin/mocha tests"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,8 @@
   "dependencies": {
     "minimist": "^1.2.0",
     "request": "^2.75.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.1.0"
   }
 }
