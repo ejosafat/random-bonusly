@@ -7,7 +7,7 @@ const spawnSync = require('child_process').spawnSync;
 const accessToken = require('./secrets.json').access_token;
 const apiUrl = 'https://bonus.ly/api/v1/';
 const auth = `?access_token=${accessToken}`;
-const online = true;
+const online = false;
 
 module.exports = {
     reward,
@@ -22,6 +22,7 @@ if (require.main == module) {
         set: argv._,
         points: argv.p || 1,
         hashtag: argv['#'] || 'why-so-serious',
+        message: argv.m
     }).then((result) => {
         console.log(result); // eslint-disable-line
     })
@@ -96,12 +97,15 @@ function getUsers() {
 }
 
 function createBonus(options) {
-    const { hashtag, set, users, points } = options;
+    const { hashtag, set, users, points, message } = options;
     const user = users[getRandomInt(0, users.length)];
-    const fortuneSet = set.length === 0 ? ['startrek'] : set;
-    const fortune = spawnSync('fortune', fortuneSet).stdout.toString();
+    const msg = message ? message : getFortune(set);
+    return `+${points} @${user} ${msg} #${hashtag}`;
+}
 
-    return `+${points} @${user} ${fortune} #${hashtag}`;
+function getFortune(set) {
+    const fortuneSet =(typeof(set) === 'undefined' || set.length === 0) ? ['startrek'] : set;
+    return spawnSync('fortune', fortuneSet).stdout.toString();
 }
 
 function postBonus(options) {
