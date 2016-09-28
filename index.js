@@ -7,7 +7,7 @@ const spawnSync = require('child_process').spawnSync;
 const accessToken = require('./secrets.json').access_token;
 const apiUrl = 'https://bonus.ly/api/v1/';
 const auth = `?access_token=${accessToken}`;
-const online = true;
+const online = false;
 
 module.exports = {
     reward,
@@ -15,18 +15,21 @@ module.exports = {
 
 if (require.main == module) {
     const argv = require('minimist')(process.argv.slice(2), {
-        boolean: true,
+        string: ['-#'],
+        boolean: 'dryRun',
     });
-    reward({
-        dryRun: argv['dry-run'],
-        set: argv._,
-        points: argv.p || 1,
-        hashtag: argv['#'] || 'why-so-serious',
-        message: argv.m
-    }).then((result) => {
-        console.log(result); // eslint-disable-line
-    })
-  .catch((err) => console.log('error', err)); // eslint-disable-line
+    console.log(process.argv);
+    console.log(argv);
+    // reward({
+    //     dryRun: argv['dry-run'],
+    //     set: argv._,
+    //     points: argv.p || 1,
+    //     hashtag: argv['#'] || 'why-so-serious',
+    //     message: argv.m
+    // }).then((result) => {
+    //     console.log(result); // eslint-disable-line
+    // })
+  // .catch((err) => console.log('error', err)); // eslint-disable-line
 }
 
 function reward(options) {
