@@ -6,7 +6,7 @@ const availableParams = {
     //     defaults: 'why-so-serious',
     // },
     'dry-run': {
-        param: 'dryRun',
+        option: 'dryRun',
         usage: '--dry-run',
         description: 'generate a bonus and log it without posting',
         defaults: false,
@@ -23,12 +23,12 @@ const availableParams = {
     //     description: 'message to be used. Random quote from fortune by default',
     //     defaults: false,
     // },
-    // p: {
-    //     param: 'points',
-    //     usage: '-p <number>',
-    //     description: 'number of points to be given. 1 by default.',
-    //     defaults: 1,
-    // },
+    p: {
+        option: 'points',
+        usage: '-p <number>',
+        description: 'number of points to be given. 1 by default.',
+        defaults: 1,
+    },
     // '_': {
     //     param: 'set',
     //     usage: 'random-bonusly pets food work',
@@ -41,24 +41,25 @@ const paramsBuilder = {
     get(argv) {
         const args = require('minimist')(argv.slice(2), {
             boolean: ['dry-run'],
-//           string: ['#'],
+            //           string: ['#'],
         });
         // console.log(argv.slice(2), args);
         const options = {};
 
-        options.dryRun = args['dry-run'];
+        Object.keys(availableParams).forEach((key) => {
+            const param = availableParams[key];
+
+            if (args.hasOwnProperty(key)) {
+                options[param.option] = args[key];
+            } else {
+                options[param.option] = param.defaults;
+            }
+            //             options[option.param] = args[key] ? args[key] : option.defaults;
+        })
 
         return options;
     },
-//         const options = {};
 
-//         Object.keys(availableParams).forEach((key) => {
-//             const option = availableParams[key];
-//           console.log(option);
-//             options[option.param] = args[key] ? args[key] : option.defaults;
-//         })
-//         return options;
-//     }
 };
 
 module.exports = paramsBuilder.get;
