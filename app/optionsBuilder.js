@@ -37,12 +37,15 @@ const availableParams = {
             return !Number.isNaN(num) && num > 0;
         },
     },
-    // '_': {
-    //     param: 'set',
-    //     usage: 'random-bonusly pets food work',
-    //     description: 'After the last command line option, if you have not specified a message, add whatever fortune sets you want, separated by spaces, startrek by default',
-    //     defaults: ['startrek'],
-    // },
+    '_': {
+        option: 'set',
+        usage: 'random-bonusly pets food work',
+        description: 'After the last command line option, if you have not specified a message, add whatever fortune sets you want, separated by spaces, startrek by default',
+        defaults: ['startrek'],
+        validate(value) {
+            return value && value.length > 0;
+        }
+    },
 };
 
 const optionsBuilder = {

@@ -105,42 +105,42 @@ describe('optionsBuilder', () => {
             assert.strictEqual(options.message, '');
         });
     });
+
+    describe('set', () => {
+        it('is a list of strings if there one or more after all the params', () => {
+            const argv = commandArgv.concat(['pets', 'art']);
+
+            const options = optionsBuilder(argv);
+            assert.deepStrictEqual(options.set, ['pets', 'art']);
+        });
+
+        it('is startrek if there is no strings after all the params', () => {
+            const argv = commandArgv;
+
+            const options = optionsBuilder(argv);
+            assert.deepStrictEqual(options.set, ['startrek']);
+        });
+    });
+
+    it('returns all options provided in the command line arguments', () => {
+        const argv = commandArgv.concat([
+            '-#',
+            'whatever',
+            '--dry-run',
+            '-m',
+            'you are legend',
+            '-p',
+            '3',
+            'art',
+            'science',
+        ]);
+        const options = optionsBuilder(argv);
+        assert.deepStrictEqual({
+            hashtag: 'whatever',
+            dryRun: true,
+            message: 'you are legend',
+            points: 3,
+            set: ['art', 'science'],
+        }, options);
+    });
 });
-
-    // it('returns an options Hash based on the command line arguments', () => {
-    //     let argv = [
-    //         '/usr/local/Cellar/node/6.6.0/bin/node',
-    //         '/usr/local/bin/random-bonusly',
-    //         '-#',
-    //         'whatever',
-    //         // '--dry-run',
-    //         // '-m "you are legend"',
-    //         // '-p 3',
-    //         // 'art',
-    //         // 'science',
-    //     ];
-    //     const options = params(argv);
-    //     assert.deepEqual({
-    //         hashtag: 'whatever',
-    //         // dryRun: true,
-    //         // message: 'you are legend',
-    //         // points: 3,
-    //         // set: ['art', 'science'],
-    //     }, options);
-    // });
-
-    // xit('provides sensible defaults', () => {
-    //     const argv = [
-    //         '/usr/local/Cellar/node/6.6.0/bin/node',
-    //         '/usr/local/bin/random-bonusly',
-    //     ];
-    //     const options = params(argv);
-    //     assert.deepEqual({
-    //         hashtag: 'why-so-serious',
-    //         dryRun: false,
-    //         message: false,
-    //         points: 1,
-    //         set: ['startrek'],
-    //     }, options);
-    // });
-
