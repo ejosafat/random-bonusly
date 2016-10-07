@@ -28,6 +28,11 @@ const availableParams = {
         usage: '-p <number>',
         description: 'number of points to be given. 1 by default.',
         defaults: 1,
+        validate(value) {
+            const num = parseInt(value, 10);
+
+            return !Number.isNaN(num) && num > 0;
+        },
     },
     // '_': {
     //     param: 'set',
@@ -37,29 +42,31 @@ const availableParams = {
     // },
 };
 
-const paramsBuilder = {
+const optionsBuilder = {
     get(argv) {
         const args = require('minimist')(argv.slice(2), {
             boolean: ['dry-run'],
             //           string: ['#'],
         });
-        // console.log(argv.slice(2), args);
-        const options = {};
 
-        Object.keys(availableParams).forEach((key) => {
-            const param = availableParams[key];
-
-            if (args.hasOwnProperty(key)) {
-                options[param.option] = args[key];
-            } else {
-                options[param.option] = param.defaults;
-            }
-            //             options[option.param] = args[key] ? args[key] : option.defaults;
-        })
-
-        return options;
+        return Object.keys(availableParams).reduce(addOptions.bind(null, args), {});
     },
-
 };
 
-module.exports = paramsBuilder.get;
+function addOptions(args, options, key) {
+    const param = availableParams[key];
+
+    if (args.hasOwnProperty(key) && isValid(param, args[key])) {
+        options[param.option] = args[key];
+    } else {
+        options[param.option] = param.defaults;
+    }
+
+    return options;
+}
+
+function isValid(param, value) {
+    return param.validate ? param.validate(value) : true;
+}
+
+module.exports = optionsBuilder.get;
