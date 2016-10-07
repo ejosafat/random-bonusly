@@ -52,7 +52,7 @@ and you'll see the bonus given and how many points left you have to reward other
 ### Command line options
 * -#: hashtag to be used. Add an space between the # and the hashtag.
 * --dry-run: generate a bonus and log it without posting.
-* -m: message to be used. Add an space between the m and the message.
+* -m: message to be used. Add an space between the m and the message. Use quotes is the message includes spaces'
 * -p: number of points to be given.
 
 ### Using different fortune sets
