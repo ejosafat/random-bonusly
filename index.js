@@ -4,6 +4,8 @@
 const request = require('request');
 const spawnSync = require('child_process').spawnSync;
 
+const optionsBuilder = require('./app/optionsBuilder');
+
 const accessToken = require('./secrets.json').access_token;
 const apiUrl = 'https://bonus.ly/api/v1/';
 const auth = `?access_token=${accessToken}`;
@@ -14,22 +16,9 @@ module.exports = {
 };
 
 if (require.main == module) {
-    const argv = require('minimist')(process.argv.slice(2), {
-        string: ['#', 'm'],
-        boolean: 'dryRun',
-    });
-    console.log(process.argv);
-    console.log(argv);
-    // reward({
-    //     dryRun: argv['dry-run'],
-    //     set: argv._,
-    //     points: argv.p || 1,
-    //     hashtag: argv['#'] || 'why-so-serious',
-    //     message: argv.m
-    // }).then((result) => {
-    //     console.log(result); // eslint-disable-line
-    // })
-  // .catch((err) => console.log('error', err)); // eslint-disable-line
+    reward(optionsBuilder(process.argv)).then((result) => {
+        console.log(result); // eslint-disable-line
+    }).catch((err) => console.log('error', err)); // eslint-disable-line
 }
 
 function reward(options) {
@@ -102,13 +91,12 @@ function getUsers() {
 function createBonus(options) {
     const { hashtag, set, users, points, message } = options;
     const user = users[getRandomInt(0, users.length)];
-    const msg = message ? message : getFortune(set);
+    const msg = message.length > 0 ? message : getFortune(set);
     return `+${points} @${user} ${msg} #${hashtag}`;
 }
 
 function getFortune(set) {
-    const fortuneSet =(typeof(set) === 'undefined' || set.length === 0) ? ['startrek'] : set;
-    return spawnSync('fortune', fortuneSet).stdout.toString();
+    return spawnSync('fortune', set).stdout.toString();
 }
 
 function postBonus(options) {
