@@ -20,12 +20,12 @@ const availableParams = {
     //     description: 'show this help',
     //     defaults: false,
     // },
-    // m: {
-    //     param: 'message',
-    //     usage: '-m "You are legend"',
-    //     description: 'message to be used. Random quote from fortune by default',
-    //     defaults: false,
-    // },
+    m: {
+        option: 'message',
+        usage: '-m You are legend',
+        description: 'message to be used. Random quote from fortune by default',
+        defaults: '',
+    },
     p: {
         option: 'points',
         usage: '-p <number>',
@@ -49,7 +49,7 @@ const optionsBuilder = {
     get(argv) {
         const args = require('minimist')(argv.slice(2), {
             boolean: ['dry-run'],
-            string: ['#'],
+            string: ['#', 'm'],
         });
 
         return Object.keys(availableParams).reduce(addOptions.bind(null, args), {});

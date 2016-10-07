@@ -82,6 +82,29 @@ describe('optionsBuilder', () => {
             assert.strictEqual(options.hashtag, 'why-so-serious');
         });
     });
+
+    describe('message', () => {
+        it('is <string> if -m <string> is present', () => {
+            const argv = commandArgv.concat('-m', 'hola');
+
+            const options = optionsBuilder(argv);
+            assert.strictEqual(options.message, 'hola');
+        });
+
+        it('is an empty string if -m<string> is present', () => {
+            const argv = commandArgv.concat('-mhola');
+
+            const options = optionsBuilder(argv);
+            assert.strictEqual(options.message, '');
+        });
+
+        it('is an empty string if -m is not present', () => {
+            const argv = commandArgv;
+
+            const options = optionsBuilder(argv);
+            assert.strictEqual(options.message, '');
+        });
+    });
 });
 
     // it('returns an options Hash based on the command line arguments', () => {

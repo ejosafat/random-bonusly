@@ -15,7 +15,7 @@ module.exports = {
 
 if (require.main == module) {
     const argv = require('minimist')(process.argv.slice(2), {
-        string: ['-#'],
+        string: ['#', 'm'],
         boolean: 'dryRun',
     });
     console.log(process.argv);
