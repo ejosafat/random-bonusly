@@ -59,6 +59,29 @@ describe('optionsBuilder', () => {
             assert.strictEqual(options.points, 1);
         });
     });
+
+    describe('hashtag', () => {
+        it('is <string> if -# <string> is present', () => {
+            const argv = commandArgv.concat('-#', 'hola-que-tal');
+
+            const options = optionsBuilder(argv);
+            assert.strictEqual(options.hashtag, 'hola-que-tal');
+        });
+
+        it('is why-so-serious if -#<string> is present', () => {
+            const argv = commandArgv.concat('-#hola-que-tal');
+
+            const options = optionsBuilder(argv);
+            assert.strictEqual(options.hashtag, 'why-so-serious');
+        });
+
+        it('is why-so-serious if -# is not present', () => {
+            const argv = commandArgv;
+
+            const options = optionsBuilder(argv);
+            assert.strictEqual(options.hashtag, 'why-so-serious');
+        });
+    });
 });
 
     // it('returns an options Hash based on the command line arguments', () => {

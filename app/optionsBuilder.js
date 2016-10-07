@@ -1,10 +1,13 @@
 const availableParams = {
-    // '#': {
-    //     param: 'hashtag',
-    //     usage: '-# why-so-serious',
-    //     description: 'hashtag to be used. #why-so-serious by default',
-    //     defaults: 'why-so-serious',
-    // },
+    '#': {
+        option: 'hashtag',
+        usage: '-# why-so-serious',
+        description: 'hashtag to be used. #why-so-serious by default',
+        defaults: 'why-so-serious',
+        validate(value) {
+            return value && value.length > 0;
+        }
+    },
     'dry-run': {
         option: 'dryRun',
         usage: '--dry-run',
@@ -46,7 +49,7 @@ const optionsBuilder = {
     get(argv) {
         const args = require('minimist')(argv.slice(2), {
             boolean: ['dry-run'],
-            //           string: ['#'],
+            string: ['#'],
         });
 
         return Object.keys(availableParams).reduce(addOptions.bind(null, args), {});
