@@ -89,10 +89,10 @@ function getUsers() {
 }
 
 function createBonus(options) {
-    const { hashtag, set, users, points, message } = options;
-    const user = users[getRandomInt(0, users.length)];
+    const { user, hashtag, set, users, points, message } = options;
+    const receiver = user.length > 0 ? user : users[getRandomInt(0, users.length)];
     const msg = message.length > 0 ? message : getFortune(set);
-    return `+${points} @${user} ${msg} #${hashtag}`;
+    return `+${points} @${receiver} ${msg} #${hashtag}`;
 }
 
 function getFortune(set) {

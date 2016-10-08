@@ -37,6 +37,12 @@ const availableParams = {
             return !Number.isNaN(num) && num > 0;
         },
     },
+    u: {
+        option: 'user',
+        usage: '-u <user>',
+        description: 'user to give the award to',
+        defaults: '',
+    },
     '_': {
         option: 'set',
         usage: 'random-bonusly pets food work',
@@ -52,7 +58,7 @@ const optionsBuilder = {
     get(argv) {
         const args = require('minimist')(argv.slice(2), {
             boolean: ['dry-run'],
-            string: ['#', 'm'],
+            string: ['#', 'm', 'u'],
         });
 
         return Object.keys(availableParams).reduce(addOptions.bind(null, args), {});

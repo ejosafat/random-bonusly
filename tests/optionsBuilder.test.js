@@ -122,6 +122,29 @@ describe('optionsBuilder', () => {
         });
     });
 
+    describe('user', () => {
+        it('is <string> if -u <string> is present', () => {
+            const argv = commandArgv.concat('-u', 'eddy.josafat');
+
+            const options = optionsBuilder(argv);
+            assert.strictEqual(options.user, 'eddy.josafat');
+        });
+
+        it('is an empty string if -u<string> is present', () => {
+            const argv = commandArgv.concat('-ueddy.josafat');
+
+            const options = optionsBuilder(argv);
+            assert.strictEqual(options.user, '');
+        });
+
+        it('is an empty string if -u is not present', () => {
+            const argv = commandArgv;
+
+            const options = optionsBuilder(argv);
+            assert.strictEqual(options.user, '');
+        });
+    });
+
     it('returns all options provided in the command line arguments', () => {
         const argv = commandArgv.concat([
             '-#',
@@ -131,6 +154,8 @@ describe('optionsBuilder', () => {
             'you are legend',
             '-p',
             '3',
+            '-u',
+            'eddy.josafat',
             'art',
             'science',
         ]);
@@ -140,6 +165,7 @@ describe('optionsBuilder', () => {
             dryRun: true,
             message: 'you are legend',
             points: 3,
+            user: 'eddy.josafat',
             set: ['art', 'science'],
         }, options);
     });

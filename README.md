@@ -50,10 +50,11 @@ $ random-bonusly
 and you'll see the bonus given and how many points left you have to reward others.
 
 ### Command line options
-* -#: hashtag to be used. Add an space between the # and the hashtag.
+* -# <string>: hashtag to be used.
 * --dry-run: generate a bonus and log it without posting.
-* -m: message to be used. Add an space between the m and the message. Use quotes is the message includes spaces'
-* -p: number of points to be given.
+* -m <string>: message to be used. Use quotes is the message includes spaces.
+* -p <integer>: number of points to be given.
+* -u <string>: username of the receiver of the reward.
 
 ### Using different fortune sets
 After the last command line option, just add whatever sets you want, separated by spaces, for example:
