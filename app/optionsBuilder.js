@@ -72,13 +72,9 @@ const optionsBuilder = {
 };
 
 function buildHelpText() {
-    let text = '';
-
-    Object.keys(availableParams).forEach((key) => {
-        text += `${availableParams[key].usage}: ${availableParams[key].description}\n`
-    });
-
-    return text;
+    return Object.keys(availableParams).reduce((text, key) => {
+        return text += `${availableParams[key].usage}: ${availableParams[key].description}\n`
+    }, '');
 }
 
 function addOptions(args, options, key) {

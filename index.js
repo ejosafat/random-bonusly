@@ -9,7 +9,7 @@ const optionsBuilder = require('./app/optionsBuilder');
 const accessToken = require('./secrets.json').access_token;
 const apiUrl = 'https://bonus.ly/api/v1/';
 const auth = `?access_token=${accessToken}`;
-const online = true;
+const online = false;
 
 module.exports = {
     reward,
