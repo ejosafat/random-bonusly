@@ -1,6 +1,6 @@
 {
   "name": "random-bonusly",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Random bonus generator to be used with bonus.ly",
   "main": "index.js",
   "bin": {

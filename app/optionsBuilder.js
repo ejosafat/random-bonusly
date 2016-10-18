@@ -1,7 +1,7 @@
 const availableParams = {
     '#': {
         option: 'hashtag',
-        usage: '-# why-so-serious',
+        usage: '-# <hashtag>',
         description: 'hashtag to be used. #why-so-serious by default',
         defaults: 'why-so-serious',
         validate(value) {
@@ -14,15 +14,15 @@ const availableParams = {
         description: 'generate a bonus and log it without posting',
         defaults: false,
     },
-    // h: {
-    //     params: 'help',
-    //     usage: '-h',
-    //     description: 'show this help',
-    //     defaults: false,
-    // },
+    h: {
+        option: 'help',
+        usage: '-h',
+        description: 'show this help',
+        defaults: false,
+    },
     m: {
         option: 'message',
-        usage: '-m You are legend',
+        usage: '-m <message>',
         description: 'message to be used. Random quote from fortune by default',
         defaults: '',
     },
@@ -40,12 +40,12 @@ const availableParams = {
     u: {
         option: 'user',
         usage: '-u <user>',
-        description: 'user to give the award to',
+        description: 'user to give the award to. If not present, It would be selected at random.',
         defaults: '',
     },
     '_': {
         option: 'set',
-        usage: 'random-bonusly pets food work',
+        usage: 'random-bonusly <set> <set> ...',
         description: 'After the last command line option, if you have not specified a message, add whatever fortune sets you want, separated by spaces, startrek by default',
         defaults: ['startrek'],
         validate(value) {
@@ -57,13 +57,29 @@ const availableParams = {
 const optionsBuilder = {
     get(argv) {
         const args = require('minimist')(argv.slice(2), {
-            boolean: ['dry-run'],
+            boolean: ['dry-run', 'h'],
             string: ['#', 'm', 'u'],
         });
 
+        if (args.h) {
+            return {
+                help: true,
+                helpText: buildHelpText(),
+            };
+        }
         return Object.keys(availableParams).reduce(addOptions.bind(null, args), {});
     },
 };
+
+function buildHelpText() {
+    let text = '';
+
+    Object.keys(availableParams).forEach((key) => {
+        text += `${availableParams[key].usage}: ${availableParams[key].description}\n`
+    });
+
+    return text;
+}
 
 function addOptions(args, options, key) {
     const param = availableParams[key];

@@ -9,7 +9,7 @@ const optionsBuilder = require('./app/optionsBuilder');
 const accessToken = require('./secrets.json').access_token;
 const apiUrl = 'https://bonus.ly/api/v1/';
 const auth = `?access_token=${accessToken}`;
-const online = false;
+const online = true;
 
 module.exports = {
     reward,
@@ -23,6 +23,9 @@ if (require.main == module) {
 
 function reward(options) {
     return new Promise((resolve, reject) => {
+        if (options.help) {
+            resolve(options.helpText);
+        }
         getOthers().then((users) => {
             const reason = createBonus(Object.assign({
                 users,

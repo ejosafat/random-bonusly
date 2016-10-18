@@ -52,6 +52,7 @@ and you'll see the bonus given and how many points left you have to reward other
 ### Command line options
 * -# <string>: hashtag to be used.
 * --dry-run: generate a bonus and log it without posting.
+* -h: show list of params allowed.
 * -m <string>: message to be used. Use quotes is the message includes spaces.
 * -p <integer>: number of points to be given.
 * -u <string>: username of the receiver of the reward.
