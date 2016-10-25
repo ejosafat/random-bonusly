@@ -9,7 +9,7 @@ const optionsBuilder = require('./app/optionsBuilder');
 const accessToken = require('./secrets.json').access_token;
 const apiUrl = 'https://bonus.ly/api/v1/';
 const auth = `?access_token=${accessToken}`;
-const online = false;
+const online = true;
 
 module.exports = {
     reward,
@@ -116,11 +116,16 @@ function postBonus(options) {
                 if (err) {
                     reject(err);
                 } else {
-                    left = `${body.result.giver.giving_balance} BK bucks left`;
-                    resolve({
-                        reason,
-                        left,
-                    });
+                    if (body.success) {
+                        left = `${body.result.giver.giving_balance} BK bucks left`;
+                        resolve({
+                            reason,
+                            left,
+                        });
+                        return;
+                    } else {
+                        reject(body.message);
+                    }
                 }
             });
         } else {
