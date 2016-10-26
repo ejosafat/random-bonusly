@@ -18,7 +18,7 @@ module.exports = {
 if (require.main == module) {
     reward(optionsBuilder(process.argv)).then((result) => {
         console.log(result); // eslint-disable-line
-    }).catch((err) => console.log('error', err)); // eslint-disable-line
+    }).catch((err) => console.log(`Error: ${err}`)); // eslint-disable-line
 }
 
 function reward(options) {
@@ -27,18 +27,22 @@ function reward(options) {
             resolve(options.helpText);
         }
         getOthers().then((users) => {
-            const reason = createBonus(Object.assign({
-                users,
-            }, options));
-
-            postBonus({
-                reason,
-                dryRun: options.dryRun,
-            }).then((result) => {
-                resolve(result);
-            }).catch((err) => {
-                reject(err);
-            });
+            try {
+                const reason = createBonus(Object.assign({
+                    users,
+                }, options));
+                postBonus({
+                    reason,
+                    dryRun: options.dryRun,
+                }).then((result) => {
+                    resolve(result);
+                }).catch((err) => {
+                    reject(err);
+                });
+            } catch (e) {
+                reject(e.message);
+                return;
+            }
         })
         .catch((err) => {
             reject(err);
@@ -99,7 +103,11 @@ function createBonus(options) {
 }
 
 function getFortune(set) {
-    return spawnSync('fortune', set).stdout.toString();
+    const cmdOutput = spawnSync('fortune', set);
+    if (cmdOutput.status !== 0) {
+        throw new Error('invalid fortune set');
+    }
+    return cmdOutput.stdout.toString();
 }
 
 function postBonus(options) {
