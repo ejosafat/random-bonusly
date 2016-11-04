@@ -98,14 +98,16 @@ function getUsers() {
 function createBonus(options) {
     const { user, hashtag, set, users, points, message } = options;
     const receiver = user.length > 0 ? user : users[getRandomInt(0, users.length)];
-    const msg = message.length > 0 ? message : getFortune(set);
+    const msg = message.length > 0 ? message : getRandomMessage(set);
     return `+${points} @${receiver} ${msg} #${hashtag}`;
 }
 
-function getFortune(set) {
+function getRandomMessage(set) {
     const cmdOutput = spawnSync('fortune', set);
-    if (cmdOutput.status !== 0) {
+    if (cmdOutput.status === 1) {
         throw new Error('invalid fortune set');
+    } else if (cmdOutput.status === null) {
+        throw new Error('Can\'t generate a random message as fortune is not present in your system');
     }
     return cmdOutput.stdout.toString();
 }
