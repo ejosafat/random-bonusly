@@ -24,7 +24,10 @@ if (require.main == module) {
 function reward(options) {
     return new Promise((resolve, reject) => {
         if (options.help) {
-            resolve(options.helpText);
+            getHashtags().then((hashtags) => {
+                const text = `${options.helpText}\nAvailable hashtags:\n${hashtags.join("\n")}`;
+                resolve(text);
+            });
         }
         getOthers().then((users) => {
             try {
@@ -46,6 +49,21 @@ function reward(options) {
         })
         .catch((err) => {
             reject(err);
+        });
+    });
+}
+
+function getHashtags() {
+    return new Promise((resolve, reject) => {
+        request.get({
+            url: `${apiUrl}/companies/show${auth}`,
+            json: true,
+        }, (err, resp, body) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(body.result.company_hashtags);
+            }
         });
     });
 }
