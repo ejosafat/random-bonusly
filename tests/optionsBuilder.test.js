@@ -46,7 +46,7 @@ describe('optionsBuilder', () => {
         });
 
         it('is 1 if -p<number> is present and <number> is not a number', () => {
-            const argv = commandArgv.concat('-phi');
+            const argv = commandArgv.concat('-pbye');
 
             const options = optionsBuilder(argv);
             assert.strictEqual(options.points, 1);
@@ -69,7 +69,7 @@ describe('optionsBuilder', () => {
         });
 
         it('is why-so-serious if -#<string> is present', () => {
-            const argv = commandArgv.concat('-#hola-que-tal');
+            const argv = commandArgv.concat('-#see-you-later');
 
             const options = optionsBuilder(argv);
             assert.strictEqual(options.hashtag, 'why-so-serious');
@@ -85,14 +85,14 @@ describe('optionsBuilder', () => {
 
     describe('message', () => {
         it('is <string> if -m <string> is present', () => {
-            const argv = commandArgv.concat('-m', 'hola');
+            const argv = commandArgv.concat('-m', 'bye');
 
             const options = optionsBuilder(argv);
-            assert.strictEqual(options.message, 'hola');
+            assert.strictEqual(options.message, 'bye');
         });
 
         it('is an empty string if -m<string> is present', () => {
-            const argv = commandArgv.concat('-mhola');
+            const argv = commandArgv.concat('-mbye');
 
             const options = optionsBuilder(argv);
             assert.strictEqual(options.message, '');
@@ -164,6 +164,7 @@ describe('optionsBuilder', () => {
             hashtag: 'whatever',
             dryRun: true,
             message: 'you are legend',
+            help: false,
             points: 3,
             user: 'eddy.josafat',
             set: ['art', 'science'],
