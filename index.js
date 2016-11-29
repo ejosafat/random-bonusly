@@ -5,6 +5,7 @@ const request = require('request');
 const spawnSync = require('child_process').spawnSync;
 
 const optionsBuilder = require('./app/optionsBuilder');
+const api = require('./app/bonuslyApi');
 
 const accessToken = require('./secrets.json').access_token;
 const apiUrl = 'https://bonus.ly/api/v1/';
@@ -24,10 +25,13 @@ if (require.main == module) {
 function reward(options) {
     return new Promise((resolve, reject) => {
         if (options.help) {
-            getHashtags().then((hashtags) => {
+            api.getHashtags().then((hashtags) => {
                 const text = `${options.helpText}\nAvailable hashtags:\n${hashtags.join("\n")}`;
                 resolve(text);
+            }).catch((err) => {
+                reject(err);
             });
+            return;
         }
         getOthers().then((users) => {
             try {
@@ -53,21 +57,6 @@ function reward(options) {
     });
 }
 
-function getHashtags() {
-    return new Promise((resolve, reject) => {
-        request.get({
-            url: `${apiUrl}/companies/show${auth}`,
-            json: true,
-        }, (err, resp, body) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(body.result.company_hashtags);
-            }
-        });
-    });
-}
-
 function getOthers() {
     return new Promise((resolve, reject) => {
         Promise.all([getOwnUserName(), getUsers()])
@@ -89,7 +78,7 @@ function getOwnUserName() {
             json: true,
         }, (err, resp, body) => {
             if (err) {
-                reject(err);
+                reject(new Error('server failure'));
             } else {
                 resolve(body.result.username);
             }

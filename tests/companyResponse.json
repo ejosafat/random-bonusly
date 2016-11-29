@@ -1,0 +1,58 @@
+{
+    "id": "24abcdef1234567890abcdef",
+    "name": "Initech",
+    "custom_user_properties": [
+        "department",
+        "location"
+    ],
+    "give_amounts": [
+        10,
+        20,
+        30,
+        40,
+        50
+    ],
+    "allow_redemptions": true,
+    "catalog_countries": [
+        10,
+        20,
+        30,
+        40,
+        50
+    ],
+    "valid_billing_information": true,
+    "show_bonus_information": true,
+    "budget": {
+        "id": "56313d8f1ba2397878000008",
+        "singular": "point",
+        "plural": "points",
+        "format": {
+            "singular": "[X] point",
+            "plural": "[X] points"
+        }
+    },
+    "company_hashtags": [
+        "#teamwork",
+        "#leadership",
+        "#problem-solving",
+        "#innovation",
+        "#customer-service",
+        "#vision"
+    ],
+    "suggested_hashtags": [
+        "#teamwork",
+        "#leadership",
+        "#problem-solving",
+        "#innovation",
+        "#customer-service",
+        "#vision"
+    ],
+    "popular_hashtags": [
+        "#teamwork",
+        "#leadership",
+        "#problem-solving",
+        "#innovation",
+        "#customer-service",
+        "#vision"
+    ]
+}
