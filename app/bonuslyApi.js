@@ -32,6 +32,22 @@ const api = {
                 }
             });
         });
+    },
+
+    getUsers() {
+        return new Promise((resolve, reject) => {
+            request.get({
+                url: `${apiUrl}users${auth}`,
+                json: true,
+            }, (err, resp, body) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    const users = body.result.map(entry => entry.username);
+                    resolve(users);
+                }
+            });
+        });
     }
 };
 

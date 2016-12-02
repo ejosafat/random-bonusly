@@ -2,6 +2,7 @@ const mockery = require('mockery');
 const assert = require('assert');
 const companyResponse = require('./companyResponse.json');
 const meResponse = require('./meResponse.json');
+const usersResponse = require('./usersResponse.json');
 
 const requestMock = {
     get(options, callback) {
@@ -9,8 +10,10 @@ const requestMock = {
 
         if (/companies/.test(options.url)) {
             result = companyResponse;
-        } else {
+        } else if (/users\/me/.test(options.url)) {
             result = meResponse;
+        } else {
+            result = usersResponse;
         }
 
         callback(null, null, {
@@ -48,6 +51,15 @@ describe('bonuslyApi', () => {
         it('returns the user name', (done) => {
             api.getOwnUserName().then(result => {
                 assert.strictEqual(result, meResponse.username);
+                done();
+            });
+        });
+    });
+
+    describe('getUsers', () => {
+        it('returns an arry of users', (done) => {
+            api.getUsers().then(result => {
+                assert.deepStrictEqual(result, usersResponse.map(user => user.username));
                 done();
             });
         });

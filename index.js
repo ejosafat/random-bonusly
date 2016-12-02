@@ -59,7 +59,7 @@ function reward(options) {
 
 function getOthers() {
     return new Promise((resolve, reject) => {
-        Promise.all([api.getOwnUserName(), getUsers()])
+        Promise.all([api.getOwnUserName(), api.getUsers()])
             .then((results) => {
                 const [me, users] = results;
                 const others = users.filter((username) => username !== me);
@@ -68,23 +68,6 @@ function getOthers() {
             .catch((err) => {
                 reject(err);
             });
-    });
-}
-
-
-function getUsers() {
-    return new Promise((resolve, reject) => {
-        request.get({
-            url: `${apiUrl}users${auth}`,
-            json: true,
-        }, (err, resp, body) => {
-            if (err) {
-                reject(err);
-            } else {
-                const users = body.result.map(entry => entry.username);
-                resolve(users);
-            }
-        });
     });
 }
 
