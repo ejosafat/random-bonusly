@@ -1,15 +1,12 @@
 #!/usr/bin/env node
 
 'use strict';
-const request = require('request');
 const spawnSync = require('child_process').spawnSync;
 
 const optionsBuilder = require('./app/optionsBuilder');
 const api = require('./app/bonuslyApi');
 
 const accessToken = require('./secrets.json').access_token;
-const apiUrl = 'https://bonus.ly/api/v1/';
-const auth = `?access_token=${accessToken}`;
 const online = true;
 
 module.exports = {
@@ -19,7 +16,7 @@ module.exports = {
 if (require.main == module) {
     reward(optionsBuilder(process.argv)).then((result) => {
         console.log(result); // eslint-disable-line
-    }).catch((err) => console.log(`Error: ${err}`)); // eslint-disable-line
+    }).catch((err) => console.log(err)); // eslint-disable-line
 }
 
 function reward(options) {
@@ -90,29 +87,16 @@ function getRandomMessage(set) {
 
 function postBonus(options) {
     const { dryRun, reason } = options;
-    let left;
     const promise = new Promise((resolve, reject) => {
         if (!dryRun && online) {
-            request.post({
-                url: `${apiUrl}bonuses${auth}`,
-                json: {
+            api.postBonus(reason).then((pointsLeft) => {
+                const left = `${pointsLeft} BK bucks left`;
+                resolve({
                     reason,
-                }
-            }, (err, resp, body) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    if (body.success) {
-                        left = `${body.result.giver.giving_balance} BK bucks left`;
-                        resolve({
-                            reason,
-                            left,
-                        });
-                        return;
-                    } else {
-                        reject(body.message);
-                    }
-                }
+                    left,
+                });
+            }).catch((err) => {
+                reject(err);
             });
         } else {
             resolve({

@@ -3,6 +3,7 @@ const assert = require('assert');
 const companyResponse = require('./companyResponse.json');
 const meResponse = require('./meResponse.json');
 const usersResponse = require('./usersResponse.json');
+const postResponse = require('./postResponse.json');
 
 const requestMock = {
     get(options, callback) {
@@ -20,7 +21,14 @@ const requestMock = {
             success: true,
             result,
         });
-    }
+    },
+
+    post(options, callback) {
+        callback(null, null, {
+            success: true,
+            result: postResponse,
+        });
+    },
 };
 
 describe('bonuslyApi', () => {
@@ -57,9 +65,18 @@ describe('bonuslyApi', () => {
     });
 
     describe('getUsers', () => {
-        it('returns an arry of users', (done) => {
+        it('returns an array of users', (done) => {
             api.getUsers().then(result => {
                 assert.deepStrictEqual(result, usersResponse.map(user => user.username));
+                done();
+            });
+        });
+    });
+
+    describe('postBonus', () => {
+        it('returns the number of points left', (done) => {
+            api.postBonus('reason').then(result => {
+                assert.strictEqual(result, postResponse.giver.giving_balance);
                 done();
             });
         });

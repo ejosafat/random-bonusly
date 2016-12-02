@@ -40,15 +40,32 @@ const api = {
                 url: `${apiUrl}users${auth}`,
                 json: true,
             }, (err, resp, body) => {
-                if (err) {
-                    reject(err);
+                if (err || !body.success) {
+                    reject(new Error('server failure'));
                 } else {
                     const users = body.result.map(entry => entry.username);
                     resolve(users);
                 }
             });
         });
-    }
+    },
+
+    postBonus(reason) {
+        return new Promise((resolve, reject) => {
+            request.post({
+                url: `${apiUrl}bonuses${auth}`,
+                json: {
+                    reason,
+                },
+            }, (err, resp, body) => {
+                if (err || !body.success) {
+                    reject(new Error(body.message));
+                } else {
+                    resolve(body.result.giver.giving_balance);
+                }
+            });
+        });
+    },
 };
 
 module.exports = api;
