@@ -1,20 +1,33 @@
 const mockery = require('mockery');
 const assert = require('assert');
 const companyResponse = require('./companyResponse.json');
+const meResponse = require('./meResponse.json');
+
 const requestMock = {
     get(options, callback) {
+        let result;
+
+        if (/companies/.test(options.url)) {
+            result = companyResponse;
+        } else {
+            result = meResponse;
+        }
+
         callback(null, null, {
-            statusCode: 200,
-            result: companyResponse,
+            success: true,
+            result,
         });
     }
 };
 
 describe('bonuslyApi', () => {
+    let api;
+
     before(() => {
-        mockery.enable({ useCleanCache: true });
+        mockery.enable();
+        mockery.registerAllowables(['../app/bonuslyApi', '../secrets.json']);
         mockery.registerMock('request', requestMock);
-        mockery.registerMock('./_stream_duplex', {});
+        api = require('../app/bonuslyApi');
     });
 
     after(() => {
@@ -24,11 +37,19 @@ describe('bonuslyApi', () => {
 
     describe('getHashtags', () => {
         it('returns the company hashtags', (done) => {
-            const api = require('../app/bonuslyApi');
-            api.getHashtags().then((result) => {
+            api.getHashtags().then(result => {
                 assert.deepStrictEqual(result, companyResponse.company_hashtags);
                 done();
             })
+        });
+    });
+
+    describe('getOwnUserName', () => {
+        it('returns the user name', (done) => {
+            api.getOwnUserName().then(result => {
+                assert.strictEqual(result, meResponse.username);
+                done();
+            });
         });
     });
 });

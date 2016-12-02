@@ -18,6 +18,21 @@ const api = {
             });
         });
     },
+
+    getOwnUserName() {
+        return new Promise((resolve, reject) => {
+            request.get({
+                url: `${apiUrl}users/me${auth}`,
+                json: true,
+            }, (err, resp, body) => {
+                if (err || !body.success) {
+                    reject(new Error('server failure'));
+                } else {
+                    resolve(body.result.username);
+                }
+            });
+        });
+    }
 };
 
 module.exports = api;
