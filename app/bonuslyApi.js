@@ -6,46 +6,31 @@ const auth = `?access_token=${accessToken}`;
 const api = {
     getHashtags() {
         return new Promise((resolve, reject) => {
-            request.get({
-                url: `${apiUrl}/companies/show${auth}`,
-                json: true,
-            }, (err, resp, body) => {
-                if (err || !body.success) {
-                    reject(new Error('Server failure'));
-                } else {
-                    resolve(body.result.company_hashtags);
-                }
+            get(`${apiUrl}/companies/show${auth}`).then(result => {
+                resolve(result.company_hashtags);
+            }).catch(err => {
+                reject(err);
             });
         });
     },
 
     getOwnUserName() {
         return new Promise((resolve, reject) => {
-            request.get({
-                url: `${apiUrl}users/me${auth}`,
-                json: true,
-            }, (err, resp, body) => {
-                if (err || !body.success) {
-                    reject(new Error('server failure'));
-                } else {
-                    resolve(body.result.username);
-                }
+            get(`${apiUrl}users/me${auth}`).then(result => {
+                resolve(result.username);
+            }).catch(err => {
+                reject(err);
             });
         });
     },
 
     getUsers() {
         return new Promise((resolve, reject) => {
-            request.get({
-                url: `${apiUrl}users${auth}`,
-                json: true,
-            }, (err, resp, body) => {
-                if (err || !body.success) {
-                    reject(new Error('server failure'));
-                } else {
-                    const users = body.result.map(entry => entry.username);
-                    resolve(users);
-                }
+            get(`${apiUrl}users${auth}`).then(result => {
+                const users = result.map(entry => entry.username);
+                resolve(users);
+            }).catch(err => {
+                reject(err);
             });
         });
     },
@@ -67,5 +52,20 @@ const api = {
         });
     },
 };
+
+function get(url) {
+    return new Promise((resolve, reject) => {
+        request.get({
+            url,
+            json: true,
+        }, (err, resp, body) => {
+            if (err || !body.success) {
+                reject(body.message || new Error('Server failure'));
+            } else {
+                resolve(body.result);
+            }
+        });
+    });
+}
 
 module.exports = api;
