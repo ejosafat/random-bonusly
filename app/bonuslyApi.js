@@ -10,8 +10,8 @@ const api = {
                 url: `${apiUrl}/companies/show${auth}`,
                 json: true,
             }, (err, resp, body) => {
-                if (err || body.statusCode !== 200) {
-                    reject(new Error('server failure'));
+                if (err || !body.success) {
+                    reject(new Error('Server failure'));
                 } else {
                     resolve(body.result.company_hashtags);
                 }
