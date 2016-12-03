@@ -6,7 +6,6 @@ const spawnSync = require('child_process').spawnSync;
 const optionsBuilder = require('./app/optionsBuilder');
 const api = require('./app/bonuslyApi');
 
-const accessToken = require('./secrets.json').access_token;
 const online = true;
 
 module.exports = {
@@ -22,9 +21,8 @@ if (require.main == module) {
 function reward(options) {
     return new Promise((resolve, reject) => {
         if (options.help) {
-            api.getHashtags().then((hashtags) => {
-                const text = `${options.helpText}\nAvailable hashtags:\n${hashtags.join("\n")}`;
-                resolve(text);
+            Promise.all([api.getHashtags(), api.getUsers()]).then((result) => {
+                resolve(makeHelpText(options.helpText, ...result));
             }).catch((err) => {
                 reject(err);
             });
@@ -105,6 +103,17 @@ function postBonus(options) {
         }
     });
     return promise;
+}
+
+function makeHelpText(helpText, hashtags, users) {
+    const text = `
+${helpText}
+Available hashtags:
+${hashtags.join(', ')}
+Available users:
+${users.join(', ')}
+    `;
+    return text;
 }
 
 function getRandomInt(min, max) {

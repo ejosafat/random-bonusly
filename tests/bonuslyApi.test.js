@@ -51,7 +51,7 @@ describe('bonuslyApi', () => {
             api.getHashtags().then(result => {
                 assert.deepStrictEqual(result, companyResponse.company_hashtags);
                 done();
-            })
+            });
         });
     });
 
