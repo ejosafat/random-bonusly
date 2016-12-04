@@ -13,21 +13,20 @@ module.exports = {
 };
 
 if (require.main == module) {
-    reward(optionsBuilder(process.argv)).then((result) => {
-        console.log(result); // eslint-disable-line
-    }).catch((err) => console.log(err)); // eslint-disable-line
+    const options = optionsBuilder(process.argv);
+    if (options.help) {
+        require('./app/help')(options.helpText).then(text => {
+            console.log(text); // eslint-disable-line
+        });
+    } else {
+        reward().then((result) => {
+            console.log(result); // eslint-disable-line
+        }).catch((err) => console.log(err)); // eslint-disable-line
+    }
 }
 
 function reward(options) {
     return new Promise((resolve, reject) => {
-        if (options.help) {
-            Promise.all([api.getHashtags(), api.getUsers()]).then((result) => {
-                resolve(makeHelpText(options.helpText, ...result));
-            }).catch((err) => {
-                reject(err);
-            });
-            return;
-        }
         getOthers().then((users) => {
             try {
                 const reason = createBonus(Object.assign({
@@ -103,17 +102,6 @@ function postBonus(options) {
         }
     });
     return promise;
-}
-
-function makeHelpText(helpText, hashtags, users) {
-    const text = `
-${helpText}
-Available hashtags:
-${hashtags.join(', ')}
-Available users:
-${users.join(', ')}
-    `;
-    return text;
 }
 
 function getRandomInt(min, max) {
