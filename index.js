@@ -5,6 +5,7 @@ const spawnSync = require('child_process').spawnSync;
 
 const optionsBuilder = require('./app/optionsBuilder');
 const api = require('./app/bonuslyApi');
+const getUser = require('./app/getUser');
 
 const online = true;
 
@@ -19,7 +20,7 @@ if (require.main == module) {
             console.log(text); // eslint-disable-line
         });
     } else {
-        reward().then((result) => {
+        reward(options).then((result) => {
             console.log(result); // eslint-disable-line
         }).catch((err) => console.log(err)); // eslint-disable-line
     }
@@ -27,11 +28,11 @@ if (require.main == module) {
 
 function reward(options) {
     return new Promise((resolve, reject) => {
-        getOthers().then((users) => {
+        getUser(options).then(user => {
             try {
-                const reason = createBonus(Object.assign({
-                    users,
-                }, options));
+                const reason = createBonus(Object.assign(options, {
+                    user,
+                }));
                 postBonus({
                     reason,
                     dryRun: options.dryRun,
@@ -51,25 +52,10 @@ function reward(options) {
     });
 }
 
-function getOthers() {
-    return new Promise((resolve, reject) => {
-        Promise.all([api.getOwnUserName(), api.getUsers()])
-            .then((results) => {
-                const [me, users] = results;
-                const others = users.filter((username) => username !== me);
-                resolve(others);
-            })
-            .catch((err) => {
-                reject(err);
-            });
-    });
-}
-
 function createBonus(options) {
-    const { user, hashtag, set, users, points, message } = options;
-    const receiver = user.length > 0 ? user : users[getRandomInt(0, users.length)];
+    const { user, hashtag, set, points, message } = options;
     const msg = message.length > 0 ? message : getRandomMessage(set);
-    return `+${points} @${receiver} ${msg} #${hashtag}`;
+    return `+${points} @${user} ${msg} #${hashtag}`;
 }
 
 function getRandomMessage(set) {
@@ -104,6 +90,3 @@ function postBonus(options) {
     return promise;
 }
 
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-}
