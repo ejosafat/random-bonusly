@@ -9,7 +9,7 @@ $ random-bonusly
 ```
 and you'll create a +1 bonus to a random person, with a random quote from Star Trek (default) and the hashtag #why-so-serious.
 ## Getting started
-This application is dependent on Node 6.x and an old application known as fortune(s). To install node you can use
+This application is dependent on Node 6.x and an old application known as fortune(s) (only if you want to generate random messages). To install node you can use
 ```
 $ brew install node
 ```
@@ -52,6 +52,7 @@ and you'll see the bonus given and how many points left you have to reward other
 ### Command line options
 * -# <string>: hashtag to be used.
 * --dry-run: generate a bonus and log it without posting.
+* -a: add to bonuses given by other people in the previous day.
 * -h: show list of params allowed.
 * -m <string>: message to be used. Use quotes is the message includes spaces.
 * -p <integer>: number of points to be given.

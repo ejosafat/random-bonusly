@@ -8,6 +8,12 @@ const availableParams = {
             return value && value.length > 0;
         }
     },
+    a: {
+        option: 'add',
+        usage: '-a',
+        description: 'add to bonuses given by other people in the previous day',
+        defaults: false,
+    },
     'dry-run': {
         option: 'dryRun',
         usage: '--dry-run',

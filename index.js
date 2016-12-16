@@ -27,6 +27,9 @@ if (require.main == module) {
 }
 
 function reward(options) {
+    if (options.add) {
+        return addToBonus(options);
+    }
     return new Promise((resolve, reject) => {
         getUser(options).then(user => {
             try {
@@ -49,6 +52,26 @@ function reward(options) {
         .catch((err) => {
             reject(err);
         });
+    });
+}
+
+function addToBonus(options) {
+    return new Promise((resolve, reject) => {
+        api.getBonuses()
+            .then(result => {
+                const promises = [];
+                result.map(({id, hashtag, receiver}) => ({
+                    id,
+                    hashtag,
+                    user: receiver.username
+                })).forEach(({id, hashtag, user}) => {
+                   const reason = `+${options.points} yay! ${hashtag}`;
+                   promises.push(api.addToBonus(reason, id));
+                });
+                Promise.all(promises).then((results) => {
+                    resolve(results);
+                }).catch(err => console.log(err));
+            });
     });
 }
 

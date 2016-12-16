@@ -2,6 +2,7 @@ const request = require('request');
 const accessToken = require('../secrets.json').access_token;
 const apiUrl = 'https://bonus.ly/api/v1/';
 const auth = `?access_token=${accessToken}`;
+const moment = require('moment');
 
 const api = {
     getHashtags() {
@@ -51,7 +52,42 @@ const api = {
             });
         });
     },
+
+    addToBonus(reason, bonusId) {
+        return new Promise((resolve, reject) => {
+            request.post({
+                url: `${apiUrl}bonuses${auth}`,
+                json: {
+                    reason,
+                    parent_bonus_id: bonusId,
+                },
+            }, (err, resp, body) => {
+                if (err || !body.success) {
+                    reject(new Error(body.message));
+                } else {
+                    resolve(body.result.giver.giving_balance);
+                }
+            });
+        });
+
+    },
+
+    getBonuses() {
+        return new Promise((resolve, reject) => {
+            get(`${apiUrl}bonuses${auth}&start_time=${startTime()}`)
+                .then(result => {
+                    resolve(result);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    },
 };
+
+function startTime() {
+    return moment().subtract(1, 'day').format('YYYYMMDD');
+}
 
 function get(url) {
     return new Promise((resolve, reject) => {

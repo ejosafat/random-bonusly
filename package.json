@@ -1,6 +1,6 @@
 {
   "name": "random-bonusly",
-  "version": "0.3.4",
+  "version": "0.4.4",
   "description": "Random bonus generator to be used with bonus.ly",
   "main": "index.js",
   "bin": {
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/ejosafat/random-bonusly#readme",
   "dependencies": {
     "minimist": "^1.2.0",
+    "moment": "^2.17.1",
     "request": "^2.75.0"
   },
   "devDependencies": {
