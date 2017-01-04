@@ -74,7 +74,7 @@ const api = {
 
     getBonuses() {
         return new Promise((resolve, reject) => {
-            get(`${apiUrl}bonuses${auth}&start_time=${startTime()}`)
+            get(`${apiUrl}bonuses${auth}&start_time=${startTime()}&include_children=true`)
                 .then(result => {
                     resolve(result);
                 })

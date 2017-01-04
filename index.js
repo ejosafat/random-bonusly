@@ -57,21 +57,25 @@ function reward(options) {
 
 function addToBonus(options) {
     return new Promise((resolve, reject) => {
-        api.getBonuses()
-            .then(result => {
+        Promise.all([api.getBonuses(), api.getOwnUserName()])
+            .then(([result, username]) => {
                 const promises = [];
-                result.map(({id, hashtag, receiver}) => ({
+                result.filter(bonus => {
+                    return !bonus.child_bonuses.find(childBonus => childBonus.giver.username === username);
+                })
+                .map(({id, hashtag, receiver}) => ({
                     id,
                     hashtag,
                     user: receiver.username
                 })).forEach(({id, hashtag, user}) => {
                    const reason = `+${options.points} yay! ${hashtag}`;
-                   promises.push(api.addToBonus(reason, id));
+                   if (online) promises.push(api.addToBonus(reason, id));
                 });
                 Promise.all(promises).then((results) => {
                     resolve(results);
                 }).catch(err => console.log(err));
-            });
+            })
+            .catch(err => console.log('err', err));
     });
 }
 
