@@ -30,53 +30,37 @@ function reward(options) {
     if (options.add) {
         return addToBonus(options);
     }
-    return new Promise((resolve, reject) => {
-        getUser(options).then(user => {
-            try {
-                const reason = createBonus(Object.assign(options, {
-                    user,
-                }));
-                postBonus({
-                    reason,
-                    dryRun: options.dryRun,
-                }).then((result) => {
-                    resolve(result);
-                }).catch((err) => {
-                    reject(err);
-                });
-            } catch (e) {
-                reject(e.message);
-                return;
-            }
-        })
-        .catch((err) => {
-            reject(err);
-        });
+    return getUser(options).then(user => {
+        try {
+            const reason = createBonus(Object.assign(options, {
+                user,
+            }));
+            return postBonus({
+                reason,
+                dryRun: options.dryRun,
+            });
+        } catch (e) {
+            return Promise.reject(e.message);
+        }
     });
 }
 
 function addToBonus(options) {
-    return new Promise((resolve, reject) => {
-        Promise.all([api.getBonuses(), api.getOwnUserName()])
-            .then(([result, username]) => {
-                const promises = [];
-                result.filter(bonus => {
-                    return !bonus.child_bonuses.find(childBonus => childBonus.giver.username === username);
-                })
-                .map(({id, hashtag, receiver}) => ({
-                    id,
-                    hashtag,
-                    user: receiver.username
-                })).forEach(({id, hashtag, user}) => {
-                   const reason = `+${options.points} yay! ${hashtag}`;
-                   if (online) promises.push(api.addToBonus(reason, id));
+    return Promise.all([api.getBonuses(), api.getOwnUserName()])
+        .then(([result, username]) => {
+            const promises = [];
+            result.filter(excludeGivenBonuses.bind(null, username))
+                .forEach(({id, hashtag}) => {
+                    const reason = `+${options.points} yay! ${hashtag}`;
+                    if (online) promises.push(api.addToBonus(reason, id));
                 });
-                Promise.all(promises).then((results) => {
-                    resolve(results);
-                }).catch(err => console.log(err));
-            })
-            .catch(err => console.log('err', err));
-    });
+            return Promise.all(promises).then(results => results)
+        })
+        .catch(err => console.log('err', err));
+}
+
+function excludeGivenBonuses(username, bonus) {
+    return !bonus.child_bonuses.find(childBonus => childBonus.giver.username === username);
 }
 
 function createBonus(options) {
@@ -97,23 +81,20 @@ function getRandomMessage(set) {
 
 function postBonus(options) {
     const { dryRun, reason } = options;
-    const promise = new Promise((resolve, reject) => {
-        if (!dryRun && online) {
-            api.postBonus(reason).then((pointsLeft) => {
-                const left = `${pointsLeft} BK bucks left`;
-                resolve({
-                    reason,
-                    left,
-                });
-            }).catch((err) => {
-                reject(err);
-            });
-        } else {
-            resolve({
+    if (!dryRun && online) {
+        return api.postBonus(reason).then((pointsLeft) => {
+            const left = `${pointsLeft} BK bucks left`;
+            return {
                 reason,
-            });
-        }
-    });
-    return promise;
+                left,
+            };
+        }).catch((err) => {
+            return Promise.reject(err);
+        });
+    } else {
+        return Promise.resolve({
+            reason,
+        });
+    }
 }
 

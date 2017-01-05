@@ -1,31 +1,27 @@
 const api = require('./bonuslyApi');
 
 function getUser(options) {
-    return new Promise((resolve, reject) => {
-        if (options.user.length > 0) {
-            resolve(options.user);
-        } else {
-            getOthers().then(users => {
-                resolve(users[getRandomInt(0, users.length)]);
-            }).catch(err => {
-                reject(err);
-            });
-        }
-    });
+    if (options.user.length > 0) {
+        return Promise.resolve(options.user);
+    } else {
+        return getOthers().then(users => {
+            return users[getRandomInt(0, users.length)];
+        }).catch(err => {
+           return Promise.reject(err);
+        });
+    }
 }
 
 function getOthers() {
-    return new Promise((resolve, reject) => {
-        Promise.all([api.getOwnUserName(), api.getUsers()])
-            .then(results => {
-                const [me, users] = results;
-                const others = users.filter((username) => username !== me);
-                resolve(others);
-            })
-            .catch(err => {
-                reject(err);
-            });
-    });
+    return Promise.all([api.getOwnUserName(), api.getUsers()])
+        .then(results => {
+            const [me, users] = results;
+            const others = users.filter((username) => username !== me);
+            return others;
+        })
+        .catch(err => {
+            return Promise.reject(err);
+        });
 }
 
 function getRandomInt(min, max) {

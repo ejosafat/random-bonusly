@@ -6,87 +6,57 @@ const moment = require('moment');
 
 const api = {
     getHashtags() {
-        return new Promise((resolve, reject) => {
-            get(`${apiUrl}/companies/show${auth}`).then(result => {
-                resolve(result.company_hashtags);
-            }).catch(err => {
-                reject(err);
-            });
-        });
+        return get(`${apiUrl}/companies/show${auth}`).then(result => {
+            return result.company_hashtags;
+        }).catch(err => Promise.reject(err));
     },
 
     getOwnUserName() {
-        return new Promise((resolve, reject) => {
-            get(`${apiUrl}users/me${auth}`).then(result => {
-                resolve(result.username);
-            }).catch(err => {
-                reject(err);
-            });
-        });
+        return get(`${apiUrl}users/me${auth}`).then(result => {
+            return result.username;
+        }).catch(err => Promise.reject(err));
     },
 
     getUsers() {
-        return new Promise((resolve, reject) => {
-            get(`${apiUrl}users${auth}`).then(result => {
-                const users = result.map(entry => entry.username);
-                resolve(users);
-            }).catch(err => {
-                reject(err);
-            });
-        });
+        return get(`${apiUrl}users${auth}`).then(result => {
+            const users = result.map(entry => entry.username);
+            return users;
+        }).catch(err => Promise.reject(err));
     },
 
     postBonus(reason) {
-        return new Promise((resolve, reject) => {
-            request.post({
-                url: `${apiUrl}bonuses${auth}`,
-                json: {
-                    reason,
-                },
-            }, (err, resp, body) => {
-                if (err || !body.success) {
-                    reject(new Error(body.message));
-                } else {
-                    resolve(body.result.giver.giving_balance);
-                }
-            });
-        });
+        return post(`${apiUrl}bonuses${auth}`, { reason });
     },
 
     addToBonus(reason, bonusId) {
-        return new Promise((resolve, reject) => {
-            request.post({
-                url: `${apiUrl}bonuses${auth}`,
-                json: {
-                    reason,
-                    parent_bonus_id: bonusId,
-                },
-            }, (err, resp, body) => {
-                if (err || !body.success) {
-                    reject(new Error(body.message));
-                } else {
-                    resolve(body.result.giver.giving_balance);
-                }
-            });
+        return post(`${apiUrl}bonuses${auth}`, {
+            reason,
+            parent_bonus_id: bonusId,
         });
-
     },
 
     getBonuses() {
-        return new Promise((resolve, reject) => {
-            get(`${apiUrl}bonuses${auth}&start_time=${startTime()}&include_children=true`)
-                .then(result => {
-                    resolve(result);
-                })
-                .catch(err => {
-                    reject(err);
-                });
-        });
+        return get(`${apiUrl}bonuses${auth}&start_time=${startTime()}&include_children=true`)
     },
 };
 
 function startTime() {
     return moment().subtract(1, 'day').format('YYYYMMDD');
+}
+
+function post(url, json) {
+    return new Promise((resolve, reject) => {
+        request.post({
+            url,
+            json,
+        }, (err, resp, body) => {
+            if (err || !body.success) {
+                reject(new Error(body.message));
+            } else {
+                resolve(body.result.giver.giving_balance);
+            }
+        });
+    });
 }
 
 function get(url) {
