@@ -161,6 +161,7 @@ describe('optionsBuilder', () => {
         ]);
         const options = optionsBuilder(argv);
         assert.deepStrictEqual({
+            add: false,
             hashtag: 'whatever',
             dryRun: true,
             message: 'you are legend',
