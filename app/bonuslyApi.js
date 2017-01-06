@@ -36,7 +36,7 @@ const api = {
     },
 
     getBonuses() {
-        return get(`${apiUrl}bonuses${auth}&start_time=${startTime()}&include_children=true`)
+        return get(`${apiUrl}bonuses${auth}&start_time=${startTime()}&include_children=true`);
     },
 };
 

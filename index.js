@@ -54,9 +54,9 @@ function addToBonus(options) {
                     const reason = `+${options.points} yay! ${hashtag}`;
                     if (online) promises.push(api.addToBonus(reason, id));
                 });
-            return Promise.all(promises).then(results => results)
+            return Promise.all(promises).then(results => results);
         })
-        .catch(err => console.log('err', err));
+        .catch(err => console.log('err', err)); // eslint-disable-line
 }
 
 function excludeGivenBonuses(username, bonus) {

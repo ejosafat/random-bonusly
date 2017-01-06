@@ -7,7 +7,7 @@ function getUser(options) {
         return getOthers().then(users => {
             return users[getRandomInt(0, users.length)];
         }).catch(err => {
-           return Promise.reject(err);
+            return Promise.reject(err);
         });
     }
 }
