@@ -60,7 +60,11 @@ function addToBonus(options) {
 }
 
 function excludeGivenBonuses(username, bonus) {
-    return !bonus.child_bonuses.find(childBonus => childBonus.giver.username === username);
+    const iGaveAChildBonus = bonus.child_bonuses.find(childBonus => childBonus.giver.username === username);
+    const iGaveTheMainBonus = bonus.giver.username === username;
+    const iReceivedTheMainBonus = bonus.receiver.username === username;
+
+    return !(iGaveAChildBonus || iGaveTheMainBonus || iReceivedTheMainBonus);
 }
 
 function createBonus(options) {
