@@ -7,7 +7,7 @@ const optionsBuilder = require('./app/optionsBuilder');
 const api = require('./app/bonuslyApi');
 const getUser = require('./app/getUser');
 
-const online = true;
+const online = false;
 
 module.exports = {
     reward,

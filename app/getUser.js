@@ -24,6 +24,20 @@ function getOthers() {
         });
 }
 
+function getWeightedDistributionOfUsers(users) {
+    const min = users.reduce((minEarnings, user) => {
+        if (minEarnings > user.lifetime_earnings) {
+            return user.lifetime_earnings;
+        }
+        return minEarnings;
+    };
+
+    const wUsers = users.map(user => {
+        const ratio = ratio / user.lifetime_earnings;
+        return new Array(parseInt(ratio * 10, 10)).fill(user.username);
+    });
+}
+
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
