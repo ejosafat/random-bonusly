@@ -43,12 +43,6 @@ const availableParams = {
             return !Number.isNaN(num) && num > 0;
         },
     },
-    t: {
-        option: 'teamwork',
-        usage: '-t',
-        description: 'Give points randomly but favoruing people with less earnings',
-        defaults: false,
-    },
     u: {
         option: 'user',
         usage: '-u <user>',

@@ -55,22 +55,6 @@ describe('optionsBuilder', () => {
         });
     });
 
-    describe('teamwork', () => {
-        it('is true if -t is present', () => {
-            const argv = commandArgv.concat('-t');
-
-            const options = optionsBuilder(argv);
-            assert.strictEqual(options.teamwork, true);
-        });
-
-        it('is false if -t is not present', () => {
-            const argv = commandArgv;
-
-            const options = optionsBuilder(argv);
-            assert.strictEqual(options.teamwork, false);
-        });
-    });
-
     describe('points', () => {
         it('is <number> if -p<number> is present', () => {
             const argv = commandArgv.concat('-p3');
@@ -215,7 +199,6 @@ describe('optionsBuilder', () => {
             message: 'you are legend',
             help: false,
             points: 3,
-            teamwork: false,
             user: 'eddy.josafat',
             set: ['art', 'science'],
         }, options);
