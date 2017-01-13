@@ -36,7 +36,12 @@ After installing those, clone this repo into a local folder. You need to create 
     "access_token": "youraccesstokenhere"
 }
 ```
-Rename the file secrets.sample.json to secrets.json and edit it to change "youraccesstokenhere" to your bonus.ly access_token, that, after logging in, you can get from [here](https://bonus.ly/api).
+Rename the file secrets.sample.json to secrets.json and edit it to change "youraccesstokenhere" to your bonus.ly access_token, that, after logging in, you can get from [here](https://bonus.ly/api). Alternatively you can 
+run 
+```
+npm run install
+```
+which will prompt you for the api key and create the secrets.json file for you.
 
 Then from within the cloned folder, run
 ```
