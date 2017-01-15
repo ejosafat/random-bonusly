@@ -12,12 +12,12 @@ const schema = {
 
 ask.message = null;
 
-console.log('Generating secrets.json');
+console.log('Generating secrets.json'); // eslint-disable-line
 ask.get(schema, (err, result) => {
     const json = JSON.stringify({
         access_token: result.key,
     });
 
     fs.writeFileSync('secrets.json', json, 'utf8');
-    console.log('File generated');
+    console.log('File generated'); // eslint-disable-line
 });
