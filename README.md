@@ -8,6 +8,9 @@ This is a command line utility, once installed, just type
 $ random-bonusly
 ```
 and you'll create a +1 bonus to a random person, with a random quote from Star Trek (default) and the hashtag #why-so-serious.
+
+It can also be used as a module to be imported in your project.
+
 ## Getting started
 This application is dependent on Node 6.x and an old application known as fortune(s) (only if you want to generate random messages). To install node you can use
 ```
@@ -62,6 +65,18 @@ and you'll see the bonus given and how many points left you have to reward other
 * -m <string>: message to be used. Use quotes is the message includes spaces.
 * -p <integer>: number of points to be given.
 * -u <string>: username of the receiver of the reward.
+
+### Used as a module in another project
+If you use this inside another project, you can call the exported reward functions with an options hash, being the options (see above for an explanation):
+* hashtag: <string>
+* dry-run: <boolean>
+* add: <boolean>
+* message: <string>
+* points: <number>
+* user: <user>
+* set: <array of strings> 
+
+The help otion is ignored.
 
 ### Using different fortune sets
 After the last command line option, just add whatever sets you want, separated by spaces, for example:

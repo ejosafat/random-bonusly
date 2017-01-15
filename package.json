@@ -1,7 +1,9 @@
 {
   "name": "random-bonusly",
-  "version": "0.4.6",
+  "version": "0.5.0",
   "description": "Random bonus generator to be used with bonus.ly",
+  "keywords": ["bonusly", "bonus.ly"],
+  "homepage": "https://github.com/ejosafat/random-bonusly",
   "main": "index.js",
   "bin": {
     "random-bonusly": "./index.js"
